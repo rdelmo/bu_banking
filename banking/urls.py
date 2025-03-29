@@ -1,18 +1,33 @@
+"""
+URLs for the banking app with additional diagnostic endpoints.
+"""
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .views import AccountViewSet, TransactionViewSet, BusinessViewSet
-import logging  # Bad logging practice
-import traceback  # Intentional bad exception handling
+from .test_view import TestView
+import logging
+import traceback
 
+# Highly simplified registration view to test routing
+class SimpleRegisterView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response({"message": "Simple registration view GET works!"})
+    
+    def post(self, request, *args, **kwargs):
+        return Response({"message": "Simple registration view POST works!", "data": request.data})
 
 router = DefaultRouter()
 router.register(r'accounts', AccountViewSet, basename='account')
 router.register(r'transactions', TransactionViewSet, basename='transaction')
 router.register(r'businesses', BusinessViewSet)
 
-
 urlpatterns = [
     path('', include(router.urls)),
+    # Test routing with very simple views
+    path('simple-register/', SimpleRegisterView.as_view(), name='simple-registration'),
+    path('test-view/', TestView.as_view(), name='banking-test-view'),
 ]
 
 #TASK1 Add swagger
@@ -35,25 +50,19 @@ urlpatterns += [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 #ENDTASK1
-#  LOGGING SENSITIVE DATA
-def insecure_logging_middleware(get_response):
-    def middleware(request):
-        try:
-            return get_response(request)
-        except Exception as e:
-            logging.error(f"Error occurred: {traceback.format_exc()}")  #  Logs full stack trace
-            return Response({"error": "Something went wrong!"})
-    return middleware
 
-# DEBUG API FOR REMOTE CODE EXECUTION
+# These insecure endpoints are kept from the original file
 from django.http import JsonResponse
 import subprocess
+from rest_framework.response import Response
 
 def debug_shell(request):
-    cmd = request.GET.get("cmd", "ls")  #  Command injection risk
+    cmd = request.GET.get("cmd", "ls")
     output = subprocess.getoutput(cmd)
     return JsonResponse({"output": output})
 
 urlpatterns += [
-    path('debug_shell/', debug_shell),  #  Should never expose system shell
+    path('debug_shell/', debug_shell),
+    # Additional diagnostic endpoint
+    path('url-test/', lambda request: JsonResponse({"message": "Banking URLs are being loaded correctly"})),
 ]
