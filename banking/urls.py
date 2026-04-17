@@ -5,7 +5,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .views import AccountViewSet, TransactionViewSet, BusinessViewSet
+from .views import AccountViewSet, TransactionViewSet, BusinessViewSet, SubscriptionViewSet
 from .test_view import TestView
 import logging
 import traceback
@@ -22,6 +22,7 @@ router = DefaultRouter()
 router.register(r'accounts', AccountViewSet, basename='account')
 router.register(r'transactions', TransactionViewSet, basename='transaction')
 router.register(r'businesses', BusinessViewSet)
+router.register(r'subscriptions', SubscriptionViewSet, basename='subscription')
 
 urlpatterns = [
     path('', include(router.urls)),

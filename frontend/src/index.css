@@ -1,0 +1,92 @@
+/* ─── JPMorgan Chase Brand Colours ─────────────────────────────────────────── */
+:root {
+  /* Brown / gold — primary (most visible colour) */
+  --jp-brown:       #6B4C1E; /* Deep JPMorgan brown */
+  --jp-brown-mid:   #C8922A; /* Mid gold-brown */
+  --jp-brown-hover: #4E3614; /* Darker brown on hover */
+  --jp-brown-light: #FDF3E3; /* Warm off-white tint for backgrounds */
+
+  /* Blue — accent / secondary UI elements */
+  --jp-blue:        #003087;
+  --jp-blue-mid:    #0066B3;
+
+  /* Neutrals */
+  --jp-white:       #FFFFFF;
+  --jp-bg:          #FAF6F1; /* Warm parchment page background */
+  --jp-card-bg:     #FFFFFF;
+  --jp-text:        #1A1A1A;
+  --jp-text-light:  #6B5E4E;
+  --jp-border:      #E0D5C5;
+  --jp-success:     #2D7D46;
+  --jp-danger:      #C0392B;
+  --jp-radius:      8px;
+  --jp-shadow:      0 2px 8px rgba(107, 76, 30, 0.10);
+}
+
+/* ─── Reset ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--jp-bg);
+  color: var(--jp-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Reusable utility classes ───────────────────────────────────────────────── */
+
+/* Card wrapper */
+.card {
+  background: var(--jp-card-bg);
+  border-radius: var(--jp-radius);
+  box-shadow: var(--jp-shadow);
+  border: 1px solid var(--jp-border);
+}
+
+/* Primary button */
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 11px 20px;
+  background: var(--jp-brown);
+  color: #fff;
+  border: none;
+  border-radius: var(--jp-radius);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.btn-primary:hover:not(:disabled) { background: var(--jp-brown-hover); }
+.btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* Text input */
+.input-field {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--jp-border);
+  border-radius: var(--jp-radius);
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--jp-text);
+  background: #fff;
+  transition: border-color 0.18s;
+}
+.input-field:focus {
+  outline: none;
+  border-color: var(--jp-brown-mid);
+}
+
+/* Inline error message */
+.error-msg {
+  color: var(--jp-danger);
+  font-size: 13px;
+  margin-top: 6px;
+}

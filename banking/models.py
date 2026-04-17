@@ -52,3 +52,39 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.transaction_type} - {self.amount}"
+
+
+class BlockedBusiness(models.Model):
+    """
+    Records that a specific user has blocked a specific business.
+    Once blocked, any attempt to create a payment to that business
+    from this user's accounts will be rejected.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocked_businesses')
+    business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='blocked_by')
+    blocked_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # Prevent the same business being blocked twice for the same user
+        unique_together = ('user', 'business')
+
+    def __str__(self):
+        return f"{self.user.username} blocked {self.business.name}"
+
+
+class SpendingCap(models.Model):
+    """
+    Optional monthly spending cap a user can set on a specific business.
+    If the user's total payments to that business this calendar month
+    would exceed the cap, the payment is rejected.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='spending_caps')
+    business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='capped_by')
+    monthly_cap = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'business')
+
+    def __str__(self):
+        return f"{self.user.username} cap £{self.monthly_cap}/mo on {self.business.name}"
