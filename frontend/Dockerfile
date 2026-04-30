@@ -5,7 +5,7 @@ FROM node:20-slim AS builder
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --silent
+RUN npm install --silent
 COPY . .
 RUN npm run build
 
