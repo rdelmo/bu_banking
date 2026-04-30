@@ -378,12 +378,7 @@ class AdminEndpointTests(APITestCase):
 
 
 
-class BankingAPITestCase(APITestCase):
-    def setUp(self):
-        # Create a test user and get a JWT token for authentication
-        self.user = User.objects.create_user(username="testuser", password="password")
-        self.token = str(RefreshToken.for_user(self.user).access_token)
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
+# Legacy test stubs removed — covered by the classes above.
 
         # Set up test data
         self.account = Account.objects.create(

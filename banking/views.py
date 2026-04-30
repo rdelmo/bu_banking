@@ -27,7 +27,8 @@ class NetworkBalanceView(APIView):
 
         if not api_key:
             return Response(
-                {'error': 'Payment network API key is not configured. Set PAYMENT_NETWORK_API_KEY in your environment.'},
+                {'error': 'Payment network API key is not configured.'
+                          ' Set PAYMENT_NETWORK_API_KEY in your environment.'},
                 status=status.HTTP_503_SERVICE_UNAVAILABLE,
             )
 

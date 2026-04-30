@@ -46,7 +46,10 @@ class Transaction(models.Model):
     transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     from_account = models.ForeignKey(Account, related_name='outgoing_transactions', on_delete=models.CASCADE)
-    to_account = models.ForeignKey(Account, related_name='incoming_transactions', on_delete=models.CASCADE, null=True, blank=True)
+    to_account = models.ForeignKey(
+        Account, related_name='incoming_transactions',
+        on_delete=models.CASCADE, null=True, blank=True
+    )
     business = models.ForeignKey(Business, related_name='transactions', on_delete=models.CASCADE, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
