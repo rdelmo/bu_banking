@@ -83,7 +83,7 @@ class UserRegistrationView(APIView):
             )
         
         try:
-            # Create the user
+            # Create the user — the post_save signal creates the two default accounts
             user = User.objects.create_user(
                 username=username,
                 password=password,
@@ -91,24 +91,10 @@ class UserRegistrationView(APIView):
                 first_name=first_name,
                 last_name=last_name
             )
-            
-            # Create default Current Account with 1000 starting balance
-            current_account = Account.objects.create(
-                name=f"{first_name or username}'s Current Account",
-                starting_balance=Decimal('1000.00'),
-                round_up_enabled=False,
-                user=user,
-                account_type='current'
-            )
-            
-            # Create default Savings Account with 0 starting balance
-            savings_account = Account.objects.create(
-                name=f"{first_name or username}'s Savings Account",
-                starting_balance=Decimal('0.00'),
-                round_up_enabled=True,  # Enable round-up for savings by default
-                user=user,
-                account_type='savings'
-            )
+
+            # Signal has already created the accounts; retrieve them for the response
+            current_account = Account.objects.get(user=user, account_type='current')
+            savings_account = Account.objects.get(user=user, account_type='savings')
             
             # Return success response with account details
             return Response({

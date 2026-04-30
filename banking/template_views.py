@@ -54,23 +54,9 @@ class TemplateRegistrationView(View):
                 last_name=last_name
             )
             
-            # Create default Current Account
-            current_account = Account.objects.create(
-                name=f"{first_name or username}'s Current Account",
-                starting_balance=Decimal('1000.00'),
-                round_up_enabled=False,
-                user=user,
-                account_type='current'
-            )
-            
-            # Create default Savings Account
-            savings_account = Account.objects.create(
-                name=f"{first_name or username}'s Savings Account",
-                starting_balance=Decimal('0.00'),
-                round_up_enabled=True,
-                user=user,
-                account_type='savings'
-            )
+            # Accounts are created by the post_save signal; retrieve them
+            current_account = Account.objects.get(user=user, account_type='current')
+            savings_account = Account.objects.get(user=user, account_type='savings')
             
             # Success message
             messages.success(request, 'Registration successful! Two accounts created.')
@@ -147,23 +133,9 @@ def register_api(request):
                 last_name=last_name
             )
             
-            # Create default Current Account
-            current_account = Account.objects.create(
-                name=f"{first_name or username}'s Current Account",
-                starting_balance=Decimal('1000.00'),
-                round_up_enabled=False,
-                user=user,
-                account_type='current'
-            )
-            
-            # Create default Savings Account
-            savings_account = Account.objects.create(
-                name=f"{first_name or username}'s Savings Account",
-                starting_balance=Decimal('0.00'),
-                round_up_enabled=True,
-                user=user,
-                account_type='savings'
-            )
+            # Accounts are created by the post_save signal; retrieve them
+            current_account = Account.objects.get(user=user, account_type='current')
+            savings_account = Account.objects.get(user=user, account_type='savings')
             
             # Return success response
             return JsonResponse({

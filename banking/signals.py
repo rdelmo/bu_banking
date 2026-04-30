@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .models import Account
 from decimal import Decimal
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=User, dispatch_uid='banking.create_default_accounts')
 def create_default_accounts(sender, instance, created, **kwargs):
     """
     Signal to create default Current and Savings accounts when a new user is created.
