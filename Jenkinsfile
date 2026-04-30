@@ -99,13 +99,13 @@ pipeline {
                     python manage.py test banking \
                         --verbosity 2 \
                         --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner \
-                        --output-file test-results.xml
+                        --output test-results
                 '''
             }
             post {
                 always {
                     // Publish test results so Jenkins shows pass/fail per test
-                    junit allowEmptyResults: true, testResults: 'test-results.xml'
+                    junit allowEmptyResults: true, testResults: 'test-results/*.xml'
                 }
             }
         }
