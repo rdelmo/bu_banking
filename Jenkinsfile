@@ -94,8 +94,8 @@ pipeline {
                 sh '''
                     . ${VENV}/bin/activate
                     python manage.py migrate --noinput
-                    # --verbosity 2 shows each test name; xmlrunner writes JUnit XML
-                    pip install django-xmlrunner --quiet
+                    # unittest-xml-reporting provides xmlrunner for JUnit XML output
+                    pip install unittest-xml-reporting --quiet
                     python manage.py test banking \
                         --verbosity 2 \
                         --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner \
