@@ -94,12 +94,8 @@ pipeline {
                 sh '''
                     . ${VENV}/bin/activate
                     python manage.py migrate --noinput
-                    # unittest-xml-reporting provides xmlrunner for JUnit XML output
-                    pip install unittest-xml-reporting --quiet
-                    python manage.py test banking \
-                        --verbosity 2 \
-                        --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner \
-                        --output test-results
+                    pip install pytest pytest-django --quiet
+                    pytest banking/tests.py -v --junitxml=test-results/results.xml
                 '''
             }
             post {
