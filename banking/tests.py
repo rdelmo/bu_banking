@@ -4,6 +4,7 @@ Test suite for Lion Kings Bank.
 Covers: registration, authentication, account isolation, transactions,
 business blocking, spending caps, subscriptions, and admin-only endpoints.
 """
+import uuid
 from decimal import Decimal
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -472,9 +473,14 @@ class BankingAPIManagerTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(RefreshToken.for_user(self.user).access_token))
 
         # Create account and business with valid UUID for account id
-        self.account = Account.objects.create(id=uuid.uuid4(), name="User Account", starting_balance=Decimal('1000.00'), round_up_enabled=True)
-        self.business = Business.objects.create(id="kfc", name="KFC", category="Food", sanctioned=False)
-        self.transaction = Transaction.objects.create(transaction_type="payment", amount=Decimal('50.00'), from_account=self.account, to_account=self.account)
+        self.account = Account.objects.create(
+            id=uuid.uuid4(), name="User Account",
+            starting_balance=Decimal('1000.00'), round_up_enabled=True)
+        self.business = Business.objects.create(
+            id="kfc", name="KFC", category="Food", sanctioned=False)
+        self.transaction = Transaction.objects.create(
+            transaction_type="payment", amount=Decimal('50.00'),
+            from_account=self.account, to_account=self.account)
 
     def test_get_account_list_as_manager(self):
         self.client.force_authenticate(user=self.manager)
@@ -513,9 +519,14 @@ class BankingAPITestCase3(APITestCase):
         self.user = User.objects.create_user(username="testuser", password="password")
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(RefreshToken.for_user(self.user).access_token))
 
-        self.account = Account.objects.create(id=uuid.uuid4(), name="User Account", starting_balance=Decimal('1000.00'), round_up_enabled=True)
-        self.business = Business.objects.create(id="kfc", name="KFC", category="Food", sanctioned=True)
-        self.transaction = Transaction.objects.create(transaction_type="payment", amount=Decimal('50.00'), from_account=self.account, to_account=self.account)
+        self.account = Account.objects.create(
+            id=uuid.uuid4(), name="User Account",
+            starting_balance=Decimal('1000.00'), round_up_enabled=True)
+        self.business = Business.objects.create(
+            id="kfc", name="KFC", category="Food", sanctioned=True)
+        self.transaction = Transaction.objects.create(
+            transaction_type="payment", amount=Decimal('50.00'),
+            from_account=self.account, to_account=self.account)
     def test_enable_roundup(self):
         url = reverse('account-enable-roundup', args=[self.account.id])
         response = self.client.post(url)
