@@ -1,0 +1,51 @@
+# ── Lion Kings Bank — docker-compose ──────────────────────────────────────────
+# Runs the full application stack:
+#   backend  → Django + Gunicorn on port 8000
+#   frontend → React (nginx) on port 3000
+#
+# Usage:
+#   docker compose up --build          # first run
+#   docker compose up                  # subsequent runs
+#   docker compose down                # stop and remove containers
+#
+# Environment:
+#   Copy .env.example to .env and fill in your values before running.
+
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lkb_backend
+    env_file: .env
+    environment:
+      DJANGO_DEBUG: "false"
+      DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1 backend"
+      DATABASE_DIR: "/app/data"
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist the SQLite database between container restarts.
+      # Named volumes must point to a directory, not a file.
+      - db_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "manage.py", "check", "--database", "default"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: lkb_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  db_data:

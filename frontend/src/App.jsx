@@ -3,6 +3,7 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Transactions from './pages/Transactions'
 import Subscriptions from './pages/Subscriptions'
+import BankOverview from './pages/BankOverview'
 
 /**
  * PrivateRoute — wraps a page that requires the user to be logged in.
@@ -42,6 +43,14 @@ export default function App() {
           element={
             <PrivateRoute>
               <Subscriptions />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/bank-overview"
+          element={
+            <PrivateRoute>
+              <BankOverview />
             </PrivateRoute>
           }
         />

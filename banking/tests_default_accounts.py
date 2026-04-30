@@ -1,10 +1,5 @@
-from django.test import TestCase
-from django.urls import reverse
-from rest_framework import status
-from rest_framework.test import APITestCase
-from django.contrib.auth.models import User
-from .models import Account
-from decimal import Decimal
+# Retired — all tests consolidated into banking/tests.py
+
 
 class DefaultAccountsTestCase(TestCase):
     def test_accounts_created_on_user_save(self):

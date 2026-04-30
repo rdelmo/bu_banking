@@ -185,14 +185,16 @@ export default function Transactions() {
             display: 'inline-flex', alignItems: 'center', gap: '6px',
           }}
         >
-          ← Back to Accounts
+          ← Back to Home
         </button>
 
         {/* ── Account header ────────────────────────────────────────── */}
         {account && (
           <div
             style={{
-              background: 'linear-gradient(135deg, #6B4C1E 0%, #C8922A 100%)',
+              background: account.account_type === 'savings'
+                ? 'linear-gradient(135deg, #1a6b3a 0%, #2ea854 100%)'
+                : 'linear-gradient(135deg, #6B4C1E 0%, #C8922A 100%)',
               borderRadius: '14px', padding: '26px 30px', color: '#fff',
               marginBottom: '24px', display: 'flex', justifyContent: 'space-between',
               alignItems: 'center', flexWrap: 'wrap', gap: '16px',
@@ -202,7 +204,12 @@ export default function Transactions() {
               <div style={{ fontSize: '11px', opacity: 0.65, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
                 {account.account_type}
               </div>
-              <div style={{ fontSize: '20px', fontWeight: '700' }}>{account.name}</div>
+              <div style={{ fontSize: '20px', fontWeight: '700' }}>
+                {account.account_type === 'savings' ? 'Savings Account'
+                  : account.account_type === 'current' ? 'Current Account'
+                  : account.account_type === 'credit' ? 'Credit Account'
+                  : 'Account'}
+              </div>
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: '12px', opacity: 0.65, marginBottom: '4px' }}>Current Balance</div>

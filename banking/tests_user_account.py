@@ -1,11 +1,5 @@
-from django.urls import reverse
-from rest_framework import status
-from rest_framework.test import APITestCase
-from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Account, Transaction, Business
-from django.contrib.auth.models import User
-from decimal import Decimal
-import uuid
+# Retired — all tests consolidated into banking/tests.py
+
 
 class UserAccountTestCase(APITestCase):
     def setUp(self):

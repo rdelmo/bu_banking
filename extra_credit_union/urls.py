@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from banking.auth_views import LoginView, UserAccountsView
 from banking.template_views import register_api
+from banking.views import NetworkBalanceView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +28,5 @@ urlpatterns = [
     path('api/register/', register_api, name='api-register'),
     path('api/logout/', lambda request: Response({'detail': 'Successfully logged out.'}), name='api-logout'),
     path('api/user/', UserAccountsView.as_view(), name='api-user'),  # Add this to match frontend request
+    path('api/network-balance/', NetworkBalanceView.as_view(), name='network-balance'),
 ]

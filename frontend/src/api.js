@@ -25,6 +25,37 @@ async function handleResponse(res) {
   return res.json()
 }
 
+/** Silently refresh the access token using the stored refresh token. Returns true on success. */
+async function tryRefresh() {
+  const refresh = localStorage.getItem('refresh_token')
+  if (!refresh) return false
+  try {
+    const res = await fetch(`${BASE}/token/refresh/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh }),
+    })
+    if (!res.ok) return false
+    const data = await res.json()
+    localStorage.setItem('access_token', data.access)
+    return true
+  } catch {
+    return false
+  }
+}
+
+/** Authenticated fetch that automatically retries once after refreshing an expired token. */
+async function authFetch(url, options = {}) {
+  const res = await fetch(url, { ...options, headers: { ...authHeaders(), ...options.headers } })
+  if (res.status === 401) {
+    const refreshed = await tryRefresh()
+    if (refreshed) {
+      return fetch(url, { ...options, headers: { ...authHeaders(), ...options.headers } })
+    }
+  }
+  return res
+}
+
 /* ── Auth ──────────────────────────────────────────────────────────────────── */
 
 /**
@@ -57,7 +88,7 @@ export function logout() {
  * Returns { user, accounts }
  */
 export async function getCurrentUser() {
-  const res = await fetch(`${BASE}/user/`, { headers: authHeaders() })
+  const res = await authFetch(`${BASE}/user/`)
   return handleResponse(res)
 }
 
@@ -65,7 +96,7 @@ export async function getCurrentUser() {
 
 /** Returns an array of Account objects belonging to the current user. */
 export async function getMyAccounts() {
-  const res = await fetch(`${BASE}/accounts/my_accounts/`, { headers: authHeaders() })
+  const res = await authFetch(`${BASE}/accounts/my_accounts/`)
   return handleResponse(res)
 }
 
@@ -73,17 +104,13 @@ export async function getMyAccounts() {
 
 /** Returns all transactions for a given account ID. */
 export async function getTransactions(accountId) {
-  const res = await fetch(`${BASE}/transactions/account/${accountId}/`, {
-    headers: authHeaders(),
-  })
+  const res = await authFetch(`${BASE}/transactions/account/${accountId}/`)
   return handleResponse(res)
 }
 
 /** Returns spending totals grouped by business category for an account. */
 export async function getSpendingSummary(accountId) {
-  const res = await fetch(`${BASE}/transactions/spending-summary/${accountId}/`, {
-    headers: authHeaders(),
-  })
+  const res = await authFetch(`${BASE}/transactions/spending-summary/${accountId}/`)
   return handleResponse(res)
 }
 
@@ -95,25 +122,30 @@ export async function getSpendingSummary(accountId) {
  *                      payment_count, total_spent, is_blocked }
  */
 export async function getSubscriptions() {
-  const res = await fetch(`${BASE}/subscriptions/`, { headers: authHeaders() })
+  const res = await authFetch(`${BASE}/subscriptions/`)
+  return handleResponse(res)
+}
+
+/* ── Network Balance (admin only) ──────────────────────────────────────────── */
+
+/**
+ * Fetches the bank's live balance on the external payment network.
+ * Only succeeds for admin users — returns { balance, currency }.
+ */
+export async function getNetworkBalance() {
+  const res = await authFetch(`${BASE}/network-balance/`)
   return handleResponse(res)
 }
 
 /** Blocks a business — future payments to it from this user will be rejected. */
 export async function blockBusiness(businessId) {
-  const res = await fetch(`${BASE}/subscriptions/block/${businessId}/`, {
-    method: 'POST',
-    headers: authHeaders(),
-  })
+  const res = await authFetch(`${BASE}/subscriptions/block/${businessId}/`, { method: 'POST' })
   return handleResponse(res)
 }
 
 /** Removes a block — payments to this business are allowed again. */
 export async function unblockBusiness(businessId) {
-  const res = await fetch(`${BASE}/subscriptions/unblock/${businessId}/`, {
-    method: 'DELETE',
-    headers: authHeaders(),
-  })
+  const res = await authFetch(`${BASE}/subscriptions/unblock/${businessId}/`, { method: 'DELETE' })
   return handleResponse(res)
 }
 

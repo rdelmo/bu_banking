@@ -107,7 +107,7 @@ export default function Subscriptions() {
             display: 'inline-flex', alignItems: 'center', gap: '6px',
           }}
         >
-          ← Back to Dashboard
+          ← Back to Home
         </button>
 
         {/* ── Page header ───────────────────────────────────────────── */}

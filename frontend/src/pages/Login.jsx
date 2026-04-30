@@ -72,7 +72,7 @@ export default function Login() {
             letterSpacing: '-0.5px',
           }}
         >
-          JPMorgan Chase
+          Lion Kings
         </h1>
       </div>
 
@@ -101,7 +101,7 @@ export default function Login() {
               id="username"
               className="input-field"
               type="text"
-              autoComplete="username"
+              autoComplete="off"
               value={username}
               onChange={e => setUsername(e.target.value)}
               placeholder="Enter your username"
@@ -121,7 +121,7 @@ export default function Login() {
               id="password"
               className="input-field"
               type="password"
-              autoComplete="current-password"
+              autoComplete="off"
               value={password}
               onChange={e => setPassword(e.target.value)}
               placeholder="Enter your password"
@@ -161,7 +161,7 @@ export default function Login() {
           textAlign: 'center',
         }}
       >
-        © 2026 JPMorgan Chase &amp; Co. All rights reserved.
+        © 2026 Lion Kings Bank. All rights reserved.
       </p>
     </div>
   )

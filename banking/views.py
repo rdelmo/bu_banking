@@ -4,14 +4,57 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
-from django.db import models
 from django.db.models import Sum, Count
 from django.contrib.auth.models import User
+from django.conf import settings
 from .models import Account, Transaction, Business, BlockedBusiness, SpendingCap
 from .serializers import AccountSerializer, TransactionSerializer, BusinessSerializer
 from decimal import Decimal
-import os
-import subprocess
+import urllib.request
+import json
+
+
+class NetworkBalanceView(APIView):
+    """
+    Admin-only view that proxies a balance request to the external payment network.
+    Returns the bank's settlement balance on the network.
+    """
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, *args, **kwargs):
+        api_key = settings.PAYMENT_NETWORK_API_KEY
+        base_url = settings.PAYMENT_NETWORK_URL
+
+        if not api_key:
+            return Response(
+                {'error': 'Payment network API key is not configured. Set PAYMENT_NETWORK_API_KEY in your environment.'},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
+        try:
+            req = urllib.request.Request(
+                f'{base_url}/api/cards/me',
+                headers={
+                    'X-API-Key': api_key,
+                    'User-Agent': 'Mozilla/5.0 (compatible; ExtraCreditUnion/1.0)',
+                    'Accept': 'application/json',
+                },
+            )
+            with urllib.request.urlopen(req, timeout=10) as r:
+                data = json.load(r)
+            return Response(data)
+        except urllib.error.HTTPError as e:
+            body = e.read().decode('utf-8', errors='replace')
+            return Response(
+                {'error': f'Payment network returned {e.code}: {body}'},
+                status=status.HTTP_502_BAD_GATEWAY,
+            )
+        except Exception as e:
+            return Response(
+                {'error': f'Unable to reach the payment network: {str(e)}'},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
 
 class UserRegistrationView(APIView):
     permission_classes = [AllowAny]
@@ -126,11 +169,6 @@ class AccountViewSet(viewsets.ModelViewSet):
         
         accounts = Account.objects.filter(user=request.user)
         serializer = self.get_serializer(accounts, many=True)
-        
-        # Print debugging info
-        print(f"User: {request.user}, Auth: {request.user.is_authenticated}")
-        print(f"Found {accounts.count()} accounts")
-        
         return Response(serializer.data)
 
 class TransactionViewSet(viewsets.ModelViewSet):

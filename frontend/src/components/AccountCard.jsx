@@ -103,7 +103,6 @@ export default function AccountCard({ account }) {
         >
           {style.label}
         </div>
-        <div style={{ fontSize: '17px', fontWeight: '600' }}>{account.name}</div>
       </div>
 
       {/* Bottom row: balance + optional round-up badge */}
