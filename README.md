@@ -1,52 +1,81 @@
-# Dummy Banking Application Project
+# Lion Kings Bank
 
-## Instructions 
-### Week 1 - Agile
-### Week2 - Running the project
+A demo banking application built for JPMorgan. Includes a customer-facing web app and a bank management portal.
 
-Clone the project with git
-Fork the repo in github first to your account .
-After forking clone your repo to which you will have push rights.
+---
 
-`git clone https://github.com/ [your_gh_account_here] /bu_banking.git`
+## What you need first
 
-Change directory to application
+Install **Docker Desktop** — this is the only thing you need.
 
-`cd bu_banking`
+- Mac / Windows: https://www.docker.com/products/docker-desktop
+- After installing, open Docker Desktop and wait for the whale icon to appear in your menu bar (it means Docker is ready)
 
-Activate python virtual environment to keep your environment clean - we will install all python dependencies inside python venv
+---
 
-`python3 -m venv venv`
+## Starting the app
 
+Open **Terminal** (Mac) or **Command Prompt** (Windows) and run these two commands:
 
-Activate virtual env (you will have to do it each time if you wont automate)
-**Linux:**
+```
+git clone https://github.com/rdelmo/bu_banking.git
+cd bu_banking
+docker compose up -d
+```
 
-`source venv/bin/activate`
+That's it. Wait about 30 seconds for everything to start.
 
-**Windows:**
-cmd.exe |  <C:\> <venv>\Scripts\activate.bat
-PowerShell |  C:\> <venv>\Scripts\Activate.ps1
+---
 
-Install python packages within this virtualenvironment
+## Opening the app
 
-`pip3 install -r requirements.txt`
+| What | Address |
+|------|---------|
+| 🏦 Banking app (customers) | http://localhost:3000 |
+| ⚙️ Admin / Bank portal | http://localhost:3000 → log in as admin |
 
-Run the application
+**Login details:**
 
-`python3 manage.py runserver 0.0.0.0:8000`
+| Role | Username | Password |
+|------|----------|----------|
+| Bank Admin (Greg) | `admin` | `admin123` |
+| Demo Customer | `john_doe` | `password123` |
 
-Access website on your localhost http://127.0.0.1:8000/api/
+---
 
-Endpoints
+## Stopping the app
 
-Django rest default page: http://127.0.0.1:8001/api/
-Redoc : http://127.0.0.1:8001/api/redoc/
-Swagger : http://127.0.0.1:8001/api/swagger/
+```
+docker compose down
+```
 
-Explore!!
+Your data is saved automatically — nothing is lost when you stop.
 
-To create superuser stop running server and run (within venv)
+---
+
+## Starting again next time
+
+```
+cd bu_banking
+docker compose up -d
+```
+
+---
+
+## Troubleshooting
+
+**"Cannot connect" or blank page** — Docker Desktop may still be starting. Wait 30 seconds and refresh.
+
+**App looks wrong after an update** — run this to rebuild:
+```
+docker compose up --build -d
+```
+
+**Start completely fresh** (wipes all data):
+```
+docker compose down -v
+docker compose up -d
+```
 
 `python3 manage.py createsuperuser`
 
