@@ -23,6 +23,8 @@ services:
       DJANGO_DEBUG: "false"
       DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1 backend"
       DATABASE_DIR: "/app/data"
+      PAYMENT_NETWORK_URL: "https://paymentsystem-cards-cf.pages.dev"
+      PAYMENT_NETWORK_API_KEY: ""
     ports:
       - "8000:8000"
     volumes:

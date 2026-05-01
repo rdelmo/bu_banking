@@ -27,6 +27,29 @@ That's it. Wait about 30 seconds for everything to start.
 
 ---
 
+## Payment Network API Key
+
+The Bank Overview page shows a live settlement balance from the payment network. This requires a private API key which is not included in the repository.
+
+To get the key, contact the project owner **Rome** directly and ask for the `PAYMENT_NETWORK_API_KEY`.
+
+Once you have it, open `docker-compose.yml` and replace the empty value on this line:
+
+```
+PAYMENT_NETWORK_API_KEY: ""
+```
+
+with your key, then restart:
+
+```
+docker compose down
+docker compose up -d
+```
+
+The rest of the app (login, dashboard, transactions, subscriptions) works without the key.
+
+---
+
 ## Opening the app
 
 | What | Address |
