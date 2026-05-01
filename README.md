@@ -18,7 +18,7 @@ Install **Docker Desktop** — this is the only thing you need.
 Open **Terminal** (Mac) or **Command Prompt** (Windows) and run these two commands:
 
 ```
-git clone https://github.com/rdelmo/bu_banking.git
+git clone -b features/UI-and-subscriptions https://github.com/rdelmo/bu_banking.git
 cd bu_banking
 docker compose up -d
 ```
