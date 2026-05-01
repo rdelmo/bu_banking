@@ -5,6 +5,7 @@ services:
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
+    user: root  # required to access the Docker socket on the host
     ports:
       - "8080:8080"   # Jenkins UI
       - "50000:50000" # Jenkins agent port
